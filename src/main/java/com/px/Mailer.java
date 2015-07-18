@@ -1,5 +1,6 @@
 package com.px;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -21,8 +22,10 @@ public class Mailer {
 
     private List <String> womenIds;
     private List <String> womenSendIntroLinks;
+    private JSONObject menCountries;
 
-    public Mailer() {
+    public Mailer()
+    {
         this.driver = new FirefoxDriver();
         this.baseUrl = "http://www.foreignladies.com";
 
@@ -33,9 +36,12 @@ public class Mailer {
         this.womenSendIntroLinks = new ArrayList<String>();
     }
 
-    public void start() {
+    public void start()
+    {
 
-        JSONObject menCountryCriteria = Utils.getMenCountryCriteria();
+        this.menCountries = Utils.getMenCountryCriteria();
+
+//        System.exit(0);
 
         this.openHomePage();
         this.goToLoginPage();
@@ -52,17 +58,20 @@ public class Mailer {
         }
     }
 
-    private void openHomePage() {
+    private void openHomePage()
+    {
         this.driver.get(this.baseUrl);
     }
 
-    private void goToLoginPage() {
+    private void goToLoginPage()
+    {
         String loginLinkText = "Affiliate Login";
         WebElement affiliateLoginLink = this.driver.findElement(By.partialLinkText(loginLinkText));
         affiliateLoginLink.click();
     }
 
-    private void submitLoginForm() {
+    private void submitLoginForm()
+    {
         WebElement usernameInput = this.driver.findElement(By.id("logins_ident"));
         usernameInput.sendKeys(this.username);
 
@@ -74,7 +83,8 @@ public class Mailer {
     }
     
 
-    private void submitAgreeWithRulesForm() {
+    private void submitAgreeWithRulesForm()
+    {
         WebElement understandRadio = this.driver.findElement(By.cssSelector("input[value=\"yes\"]"));
         understandRadio.click();
 
@@ -82,12 +92,14 @@ public class Mailer {
         submitButton.click();
     }
 
-    private void goToWomanList() {
+    private void goToWomanList()
+    {
         String womenListUrl = "http://www.foreignladies.com/aff-assign_women~_step-500.html";
         this.driver.get(womenListUrl);
     }
 
-    private void collectWomenSearchProfileLinks() {
+    private void collectWomenSearchProfileLinks()
+    {
         String linkSelector = "a[title=\"Send Intro\"]";
         List<WebElement> links = this.driver.findElements(By.cssSelector(linkSelector));
 
@@ -96,7 +108,8 @@ public class Mailer {
         }
     }
 
-    private void extractWomenIdsFromSearchProfileLinks() {
+    private void extractWomenIdsFromSearchProfileLinks()
+    {
         if (this.womenSendIntroLinks.size() > 0) {
             Pattern p = Pattern.compile("[0-9]+");
             for (String link : this.womenSendIntroLinks) {
@@ -108,9 +121,65 @@ public class Mailer {
         }
     }
 
-    private void sendLettersForWoman(String womanLink) {
+    private void sendLettersForWoman(String womanLink)
+    {
         this.driver.get(womanLink);
+        for (String country : this.menCountries.keySet()) {
+            Utils.wait(500);
+            JSONArray countryAgeRanges = this.getCountryRanges(country);
+            for (int i = 0; i < countryAgeRanges.length(); i++) {
+                System.out.println("Setting range for " + country + ": " + countryAgeRanges.get(i));
+                WebElement countrySelect = driver.findElement(By.cssSelector("#fk_countries"));
+                countrySelect.sendKeys(country);
+                this.setAgeRange(countryAgeRanges.get(i));
+                Utils.wait(500);
+                this.checkOtherSearchCriteria();
+                Utils.wait(500);
+                this.sendLetters();
+                this.driver.get(womanLink); // go back for next criteria
+                Utils.wait(500);
+            }
+        }
 
+        System.exit(0);
+    }
+
+    private void checkOtherSearchCriteria()
+    {
+        WebElement lastActivity = driver.findElement(By.cssSelector("select[name=last_activity]"));
+        lastActivity.sendKeys("Less than 6 months ago");
+
+        WebElement photos = driver.findElement(By.cssSelector("select[name=profile_default_pic]"));
+        photos.sendKeys("Profiles with Photos");
+    }
+
+    private JSONArray getCountryRanges(String country)
+    {
+        JSONObject objCountry = this.menCountries.getJSONObject(country);
+        return objCountry.getJSONArray("ranges");
+    }
+
+    private void setAgeRange(Object range)
+    {
+        JSONArray arr = new JSONArray(range.toString());
+
+        WebElement from = this.driver.findElement(By.cssSelector("select[name=profile_age__GREATER_EQUAL]"));
+        from.sendKeys(arr.get(0).toString());
+
+        WebElement to = this.driver.findElement(By.cssSelector("select[name=profile_age__SMALLER_EQUAL]"));
+        to.sendKeys(arr.get(1).toString());
+    }
+
+    private void sendLetters()
+    {
+        WebElement submitButton = this.driver.findElement(By.cssSelector("input[name=btn_submit]"));
+        submitButton.click();
+
+        List<WebElement> noResultsErrorSpan = this.driver.findElements(By.cssSelector("span.error_star"));
+        if (noResultsErrorSpan.size() != 0) {
+            return;
+        }
+        // TODO: check all and send letter to this motherfuckers
         System.exit(0);
     }
 }

@@ -1,5 +1,6 @@
 package com.px;
 
+import org.json.JSONObject;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -33,12 +34,15 @@ public class Mailer {
     }
 
     public void start() {
+
+        JSONObject menCountryCriteria = Utils.getMenCountryCriteria();
+
         this.openHomePage();
         this.goToLoginPage();
         this.submitLoginForm();
-        this.wait(2000);
+        Utils.wait(2000);
         this.submitAgreeWithRulesForm();
-        this.wait(2000);
+        Utils.wait(2000);
         this.goToWomanList();
         this.collectWomenSearchProfileLinks();
         this.extractWomenIdsFromSearchProfileLinks();
@@ -68,17 +72,7 @@ public class Mailer {
         WebElement submitButton = this.driver.findElement(By.name("btn_submit"));
         submitButton.click();
     }
-
-    private void wait(int milliseconds) {
-        try {
-            // to sleep 10 seconds
-            Thread.sleep(milliseconds);
-        } catch (InterruptedException e) {
-            // recommended because catching InterruptedException clears interrupt flag
-            Thread.currentThread().interrupt();
-            // you probably want to quit if the thread is interrupted
-        }
-    }
+    
 
     private void submitAgreeWithRulesForm() {
         WebElement understandRadio = this.driver.findElement(By.cssSelector("input[value=\"yes\"]"));

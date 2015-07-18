@@ -1,0 +1,136 @@
+{
+  "United States": {
+    "ranges" : [
+      [30, 37],
+      [37, 41],
+      [41, 45],
+      [45, 48],
+      [48, 50],
+      [50, 52],
+      [52, 55],
+      [55, 57],
+      [57, 60],
+      [60, 63],
+      [63, 67],
+      [67, 75]
+    ]
+  },
+  "United Kingdom": {
+    "ranges": [
+      [30, 50]
+    ]
+  },
+  "Canada": {
+    "ranges": [
+      [30, 50]
+    ]
+  },
+  "Australia": {
+    "ranges": [
+      [30, 75]
+    ]
+  },
+  "New Zealand": {
+    "ranges": [
+      [30, 75]
+    ]
+  },
+  "Denmark": {
+    "ranges": [
+      [30, 75]
+    ]
+  },
+  "Netherlands": {
+    "ranges": [
+      [30, 75]
+    ]
+  },
+  "Norway": {
+    "ranges": [
+      [30, 75]
+    ]
+  },
+  "Sweden": {
+    "ranges": [
+      [30, 75]
+    ]
+  },
+  "Switzerland": {
+    "ranges": [
+      [30, 75]
+    ]
+  },
+  "Belgium": {
+    "ranges": [
+      [30, 75]
+    ]
+  },
+  "France": {
+    "ranges": [
+      [30, 75]
+    ]
+  },
+  "Germany": {
+    "ranges": [
+      [30, 75]
+    ]
+  },
+  "Ireland": {
+    "ranges": [
+      [30, 75]
+    ]
+  },
+  "South Africa": {
+    "ranges": [
+      [30, 75]
+    ]
+  },
+  "Spain": {
+    "ranges": [
+      [30, 75]
+    ]
+  },
+  "Brazil": {
+    "ranges": [
+      [30, 75]
+    ]
+  },
+  "Costa Rica": {
+    "ranges": [
+      [30, 75]
+    ]
+  },
+  "Cyprus": {
+    "ranges": [
+      [30, 75]
+    ]
+  },
+  "Dominica": {
+    "ranges": [
+      [30, 75]
+    ]
+  },
+  "Dominican Republic": {
+    "ranges": [
+      [30, 75]
+    ]
+  },
+  "Finland": {
+    "ranges": [
+      [30, 75]
+    ]
+  },
+  "Hong Kong": {
+    "ranges": [
+      [30, 75]
+    ]
+  },
+  "Italy": {
+    "ranges": [
+      [
+        30,
+        75
+      ]
+    ]
+  }
+}

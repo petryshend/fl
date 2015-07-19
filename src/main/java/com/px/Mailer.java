@@ -42,8 +42,6 @@ public class Mailer {
 
         this.menCountries = Utils.getMenCountryCriteria();
 
-//        System.exit(0);
-
         this.openHomePage();
         this.goToLoginPage();
         this.submitLoginForm();
@@ -142,8 +140,6 @@ public class Mailer {
                 Utils.wait(500);
             }
         }
-
-        System.exit(0);
     }
 
     private void checkOtherSearchCriteria()
@@ -195,8 +191,11 @@ public class Mailer {
             return;
         }
 
+        Utils.wait(500);
         WebElement selectIntroLetter = this.driver.findElement(By.cssSelector("select#intro_letter"));
         selectIntroLetter.sendKeys(Keys.ARROW_DOWN);
+        selectIntroLetter.sendKeys(Keys.ENTER);
+        Utils.wait(1000);
 
         WebElement choosePhotosAttachedButton = this.driver.findElement(By.cssSelector("#choose_photos_attached"));
         choosePhotosAttachedButton.click();

@@ -134,6 +134,7 @@ public class Mailer {
                 Utils.wait(500);
                 this.checkOtherSearchCriteria();
                 Utils.wait(500);
+                this.clickSubmitSearchButton();
                 this.sendLetters();
                 Utils.wait(500);
                 this.driver.get(womanLink); // go back for next criteria
@@ -170,40 +171,68 @@ public class Mailer {
 
     private void sendLetters()
     {
-        WebElement submitButton = this.driver.findElement(By.cssSelector("input[name=btn_submit]"));
-        submitButton.click();
-
-        List<WebElement> noResultsErrorSpan = this.driver.findElements(By.cssSelector("span.error_star"));
-        if (noResultsErrorSpan.size() != 0) {
-            System.out.println("No results here");
+        if (!this.hasMenSearchResults()) {
             return;
         }
-
-        WebElement checkAll = this.driver.findElement(By.cssSelector("input.check_all"));
-        checkAll.click();
-
+        this.checkAllMen();
         Utils.wait(500);
-
-        WebElement sendIntroButton = this.driver.findElement(By.partialLinkText("SEND INTRO TO SELECTED MEMBERS"));
-        sendIntroButton.click();
-
+        this.clickBigGreenButton();
         if (this.driver.getPageSource().contains("User does not want to receive intro letters!")) {
             return;
         }
-
         Utils.wait(500);
+        this.selectIntroLetter();
+        Utils.wait(1000);
+        this.selectPhotoToAttach();
+        this.clickSendMessageButton();
+    }
+
+    private void clickSubmitSearchButton()
+    {
+        WebElement submitButton = this.driver.findElement(By.cssSelector("input[name=btn_submit]"));
+        submitButton.click();
+    }
+
+    private boolean hasMenSearchResults()
+    {
+        List<WebElement> noResultsErrorSpan = this.driver.findElements(By.cssSelector("span.error_star"));
+        if (noResultsErrorSpan.size() != 0) {
+            System.out.println("No results here");
+            return false;
+        }
+        return true;
+    }
+
+    private void checkAllMen()
+    {
+        WebElement checkAll = this.driver.findElement(By.cssSelector("input.check_all"));
+        checkAll.click();
+    }
+
+    private void clickBigGreenButton()
+    {
+        WebElement sendIntroButton = this.driver.findElement(By.partialLinkText("SEND INTRO TO SELECTED MEMBERS"));
+        sendIntroButton.click();
+    }
+
+    private void selectIntroLetter()
+    {
         WebElement selectIntroLetter = this.driver.findElement(By.cssSelector("select#intro_letter"));
         selectIntroLetter.sendKeys(Keys.ARROW_DOWN);
         selectIntroLetter.sendKeys(Keys.ENTER);
-        Utils.wait(1000);
+    }
 
+    private void selectPhotoToAttach()
+    {
         WebElement choosePhotosAttachedButton = this.driver.findElement(By.cssSelector("#choose_photos_attached"));
         choosePhotosAttachedButton.click();
-
         String checkboxSelector = ".photo_list_bottom input[type=checkbox]";
         List<WebElement> photoCheckboxes = this.driver.findElements(By.cssSelector(checkboxSelector));
         photoCheckboxes.get(0).click();
+    }
 
+    private void clickSendMessageButton()
+    {
         WebElement sendMessageButton = this.driver.findElement(By.cssSelector("input[name=btn_submit]"));
         sendMessageButton.click();
     }

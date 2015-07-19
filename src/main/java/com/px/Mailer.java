@@ -3,6 +3,7 @@ package com.px;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -136,6 +137,7 @@ public class Mailer {
                 this.checkOtherSearchCriteria();
                 Utils.wait(500);
                 this.sendLetters();
+                Utils.wait(500);
                 this.driver.get(womanLink); // go back for next criteria
                 Utils.wait(500);
             }
@@ -177,9 +179,33 @@ public class Mailer {
 
         List<WebElement> noResultsErrorSpan = this.driver.findElements(By.cssSelector("span.error_star"));
         if (noResultsErrorSpan.size() != 0) {
+            System.out.println("No results here");
             return;
         }
-        // TODO: check all and send letter to this motherfuckers
-        System.exit(0);
+
+        WebElement checkAll = this.driver.findElement(By.cssSelector("input.check_all"));
+        checkAll.click();
+
+        Utils.wait(500);
+
+        WebElement sendIntroButton = this.driver.findElement(By.partialLinkText("SEND INTRO TO SELECTED MEMBERS"));
+        sendIntroButton.click();
+
+        if (this.driver.getPageSource().contains("User does not want to receive intro letters!")) {
+            return;
+        }
+
+        WebElement selectIntroLetter = this.driver.findElement(By.cssSelector("select#intro_letter"));
+        selectIntroLetter.sendKeys(Keys.ARROW_DOWN);
+
+        WebElement choosePhotosAttachedButton = this.driver.findElement(By.cssSelector("#choose_photos_attached"));
+        choosePhotosAttachedButton.click();
+
+        String checkboxSelector = ".photo_list_bottom input[type=checkbox]";
+        List<WebElement> photoCheckboxes = this.driver.findElements(By.cssSelector(checkboxSelector));
+        photoCheckboxes.get(0).click();
+
+        WebElement sendMessageButton = this.driver.findElement(By.cssSelector("input[name=btn_submit]"));
+        sendMessageButton.click();
     }
 }
